@@ -1,0 +1,6 @@
+{
+  "name": "CareerFlow",
+  "description": "Intelligent job application tracker, pipeline workspace, and career search hub.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

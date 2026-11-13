@@ -1,0 +1,313 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Authenticated job seeker profile and career preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "email": { "type": "string", "format": "email", "minLength": 3, "maxLength": 254 },
+        "photoURL": { "type": "string", "maxLength": 1000 },
+        "phone": { "type": "string", "maxLength": 40 },
+        "currentRole": { "type": "string", "maxLength": 120 },
+        "experience": { "type": "string", "maxLength": 80 },
+        "education": { "type": "string", "maxLength": 240 },
+        "skills": { "type": "array" },
+        "preferredRoles": { "type": "array" },
+        "preferredLocations": { "type": "array" },
+        "workModePreference": { "type": "string", "enum": ["Remote", "Hybrid", "Onsite", "Any"] },
+        "salaryPreference": { "type": "string", "maxLength": 80 },
+        "employmentTypePreference": { "type": "string", "enum": ["Full-time", "Part-time", "Contract", "Internship", "Any"] },
+        "weeklyApplicationGoal": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "name", "email", "createdAt", "updatedAt"]
+    },
+    "JobApplication": {
+      "title": "JobApplication",
+      "description": "A tracked job application owned by a single user.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "companyName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "companyLogo": { "type": "string", "maxLength": 1000 },
+        "companyWebsite": { "type": "string", "maxLength": 500 },
+        "industry": { "type": "string", "maxLength": 120 },
+        "companyLocation": { "type": "string", "maxLength": 160 },
+        "jobTitle": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "jobDescription": { "type": "string", "maxLength": 20000 },
+        "jobUrl": { "type": "string", "maxLength": 1000 },
+        "location": { "type": "string", "maxLength": 160 },
+        "workMode": { "type": "string", "enum": ["Remote", "Hybrid", "Onsite"] },
+        "employmentType": { "type": "string", "enum": ["Full-time", "Part-time", "Contract", "Internship", "Freelance"] },
+        "experienceRequired": { "type": "string", "maxLength": 80 },
+        "salary": { "type": "string", "maxLength": 100 },
+        "source": { "type": "string", "maxLength": 100 },
+        "appliedDate": { "type": "string", "maxLength": 32 },
+        "status": {
+          "type": "string",
+          "enum": [
+            "Interested",
+            "Preparing",
+            "Applied",
+            "Assessment",
+            "HR Interview",
+            "Technical Interview",
+            "Managerial Interview",
+            "Final Interview",
+            "Offer Received",
+            "Offer Accepted",
+            "Offer Rejected",
+            "Rejected",
+            "Withdrawn",
+            "No Response"
+          ]
+        },
+        "priority": { "type": "string", "enum": ["Low", "Medium", "High", "Urgent"] },
+        "resumeVersion": { "type": "string", "maxLength": 160 },
+        "coverLetter": { "type": "string", "maxLength": 15000 },
+        "recruiterName": { "type": "string", "maxLength": 120 },
+        "recruiterEmail": { "type": "string", "maxLength": 254 },
+        "recruiterLinkedinUrl": { "type": "string", "maxLength": 500 },
+        "notes": { "type": "string", "maxLength": 15000 },
+        "nextFollowUpDate": { "type": "string", "maxLength": 32 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "userId",
+        "companyName",
+        "jobTitle",
+        "status",
+        "priority",
+        "workMode",
+        "employmentType",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "ActivityLog": {
+      "title": "ActivityLog",
+      "description": "Immutable timeline event tied to a user's job application.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "applicationId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "activityType": {
+          "type": "string",
+          "enum": [
+            "APPLICATION_CREATED",
+            "APPLICATION_UPDATED",
+            "APPLICATION_SUBMITTED",
+            "STATUS_CHANGED",
+            "INTERVIEW_SCHEDULED",
+            "INTERVIEW_COMPLETED",
+            "RECRUITER_CONTACTED",
+            "FOLLOW_UP_COMPLETED",
+            "OFFER_RECEIVED",
+            "APPLICATION_CLOSED"
+          ]
+        },
+        "description": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "fromStatus": { "type": "string", "maxLength": 60 },
+        "toStatus": { "type": "string", "maxLength": 60 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "userId", "applicationId", "activityType", "description", "createdAt"]
+    },
+    "Interview": {
+      "title": "Interview",
+      "description": "An interview round associated with a user-owned job application.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "applicationId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "roundName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "interviewType": {
+          "type": "string",
+          "enum": ["HR", "Technical", "Coding assessment", "Managerial", "System design", "Final interview", "Other"]
+        },
+        "scheduledAt": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "durationMinutes": { "type": "number" },
+        "interviewer": { "type": "string", "maxLength": 160 },
+        "meetingUrl": { "type": "string", "maxLength": 1000 },
+        "status": {
+          "type": "string",
+          "enum": ["Scheduled", "Completed", "Rescheduled", "Cancelled"]
+        },
+        "topicsToRevise": { "type": "array" },
+        "questionsToPractice": { "type": "array" },
+        "preparationChecklist": { "type": "array" },
+        "preparationNotes": { "type": "string", "maxLength": 15000 },
+        "questionsAsked": { "type": "string", "maxLength": 15000 },
+        "feedback": { "type": "string", "maxLength": 15000 },
+        "result": {
+          "type": "string",
+          "enum": ["Pending", "Passed", "Failed", "On Hold"]
+        },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "userId",
+        "applicationId",
+        "roundName",
+        "interviewType",
+        "scheduledAt",
+        "status",
+        "result",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "TaskItem": {
+      "title": "TaskItem",
+      "description": "A job-search task or follow-up reminder owned by a single user, optionally linked to a JobApplication.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "applicationId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "description": { "type": "string", "maxLength": 5000 },
+        "category": {
+          "type": "string",
+          "enum": [
+            "Recruiter follow-up",
+            "Interview preparation",
+            "Assessment deadline",
+            "Resume update",
+            "Research company",
+            "Other"
+          ]
+        },
+        "dueDate": { "type": "string", "maxLength": 32 },
+        "reminderDate": { "type": "string", "maxLength": 32 },
+        "priority": { "type": "string", "enum": ["Low", "Medium", "High", "Urgent"] },
+        "status": {
+          "type": "string",
+          "enum": ["Pending", "In Progress", "Completed"]
+        },
+        "completedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "userId",
+        "applicationId",
+        "title",
+        "category",
+        "priority",
+        "status",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "DocumentRecord": {
+      "title": "DocumentRecord",
+      "description": "Metadata and optional extracted text for a resume, cover letter, certificate, or supporting document whose binary file is stored locally in IndexedDB.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "documentType": {
+          "type": "string",
+          "enum": ["Resume", "Cover Letter", "Certificate", "Supporting Document"]
+        },
+        "version": { "type": "string", "minLength": 1, "maxLength": 40 },
+        "fileName": { "type": "string", "maxLength": 260 },
+        "fileType": { "type": "string", "maxLength": 120 },
+        "fileSize": { "type": "number" },
+        "localStorageReference": { "type": "string", "maxLength": 128 },
+        "skills": { "type": "array" },
+        "experience": { "type": "string", "maxLength": 120 },
+        "content": { "type": "string", "maxLength": 30000 },
+        "notes": { "type": "string", "maxLength": 5000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "documentType",
+        "version",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AiHistoryItem": {
+      "title": "AiHistoryItem",
+      "description": "User-consented saved AI Career Assistant analysis or generation result.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "userId": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "applicationId": { "type": "string", "maxLength": 128 },
+        "operationType": {
+          "type": "string",
+          "enum": [
+            "RESUME_ANALYSIS",
+            "JD_ANALYSIS",
+            "RESUME_JOB_MATCH",
+            "COVER_LETTER",
+            "INTERVIEW_QUESTIONS"
+          ]
+        },
+        "title": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "inputSummary": { "type": "string", "minLength": 1, "maxLength": 500 },
+        "result": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": [
+        "id",
+        "userId",
+        "applicationId",
+        "operationType",
+        "title",
+        "inputSummary",
+        "result",
+        "createdAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private user profile and career preferences, isolated strictly to the owning user."
+    },
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/JobApplication" },
+      "description": "User-owned job application records with strict owner isolation."
+    },
+    "/activityLogs/{activityId}": {
+      "schema": { "$ref": "#/entities/ActivityLog" },
+      "description": "Application timeline events linked to an owned JobApplication."
+    },
+    "/interviews/{interviewId}": {
+      "schema": { "$ref": "#/entities/Interview" },
+      "description": "Interview rounds linked to an owned JobApplication."
+    },
+    "/tasks/{taskId}": {
+      "schema": { "$ref": "#/entities/TaskItem" },
+      "description": "User-owned tasks and follow-up reminders, optionally linked to an owned JobApplication."
+    },
+    "/documents/{documentId}": {
+      "schema": { "$ref": "#/entities/DocumentRecord" },
+      "description": "User-owned resume and document metadata with strict owner isolation."
+    },
+    "/aiHistory/{historyId}": {
+      "schema": { "$ref": "#/entities/AiHistoryItem" },
+      "description": "User-consented saved AI analyses and generated career content."
+    }
+  }
+}

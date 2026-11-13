@@ -1,0 +1,562 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Safety Net: Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // --- Reusable Hardened Helpers ---
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isVerified() && request.auth.uid == userId;
+    }
+
+    function isOptionalString(data, key, maxLen) {
+      return !(key in data) || (data[key] is string && data[key].size() <= maxLen);
+    }
+
+    function isValidStringList(data, key, maxItems, maxItemLen) {
+      return !(key in data) || (
+        data[key] is list &&
+        data[key].size() <= maxItems &&
+        (data[key].size() == 0 || (data[key][0] is string && data[key][0].size() <= maxItemLen))
+      );
+    }
+
+    function isValidWorkModePref(mode) {
+      return mode in ['Remote', 'Hybrid', 'Onsite', 'Any'];
+    }
+
+    function isValidEmploymentPref(emp) {
+      return emp in ['Full-time', 'Part-time', 'Contract', 'Internship', 'Any'];
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'name', 'email', 'createdAt', 'updatedAt']) &&
+        data.keys().hasOnly([
+          'uid', 'name', 'email', 'photoURL', 'phone', 'currentRole',
+          'experience', 'education', 'skills', 'preferredRoles',
+          'preferredLocations', 'workModePreference', 'salaryPreference',
+          'employmentTypePreference', 'weeklyApplicationGoal',
+          'createdAt', 'updatedAt'
+        ]) &&
+        data.uid == request.auth.uid &&
+        data.uid == userId &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 120 &&
+        data.email is string && data.email.size() >= 3 && data.email.size() <= 254 &&
+        isOptionalString(data, 'photoURL', 1000) &&
+        isOptionalString(data, 'phone', 40) &&
+        isOptionalString(data, 'currentRole', 120) &&
+        isOptionalString(data, 'experience', 80) &&
+        isOptionalString(data, 'education', 240) &&
+        isValidStringList(data, 'skills', 30, 80) &&
+        isValidStringList(data, 'preferredRoles', 15, 100) &&
+        isValidStringList(data, 'preferredLocations', 15, 100) &&
+        (!('workModePreference' in data) || isValidWorkModePref(data.workModePreference)) &&
+        isOptionalString(data, 'salaryPreference', 80) &&
+        (!('employmentTypePreference' in data) || isValidEmploymentPref(data.employmentTypePreference)) &&
+        (!('weeklyApplicationGoal' in data) || (data.weeklyApplicationGoal is number && data.weeklyApplicationGoal >= 1 && data.weeklyApplicationGoal <= 100)) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidApplicationStatus(status) {
+      return status in [
+        'Interested',
+        'Preparing',
+        'Applied',
+        'Assessment',
+        'HR Interview',
+        'Technical Interview',
+        'Managerial Interview',
+        'Final Interview',
+        'Offer Received',
+        'Offer Accepted',
+        'Offer Rejected',
+        'Rejected',
+        'Withdrawn',
+        'No Response'
+      ];
+    }
+
+    function isValidPriority(priority) {
+      return priority in ['Low', 'Medium', 'High', 'Urgent'];
+    }
+
+    function isValidWorkMode(mode) {
+      return mode in ['Remote', 'Hybrid', 'Onsite'];
+    }
+
+    function isValidEmploymentType(emp) {
+      return emp in ['Full-time', 'Part-time', 'Contract', 'Internship', 'Freelance'];
+    }
+
+    function isValidApplication(data, applicationId) {
+      return data.keys().hasAll([
+          'id', 'userId', 'companyName', 'jobTitle', 'status',
+          'priority', 'workMode', 'employmentType', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'userId', 'companyName', 'companyLogo', 'companyWebsite',
+          'industry', 'companyLocation', 'jobTitle', 'jobDescription',
+          'jobUrl', 'location', 'workMode', 'employmentType',
+          'experienceRequired', 'salary', 'source', 'appliedDate',
+          'status', 'priority', 'resumeVersion', 'coverLetter',
+          'recruiterName', 'recruiterEmail', 'recruiterLinkedinUrl',
+          'notes', 'nextFollowUpDate', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id == applicationId &&
+        isValidId(data.id) &&
+        data.userId == request.auth.uid &&
+        data.companyName is string && data.companyName.size() >= 1 && data.companyName.size() <= 160 &&
+        isOptionalString(data, 'companyLogo', 1000) &&
+        isOptionalString(data, 'companyWebsite', 500) &&
+        isOptionalString(data, 'industry', 120) &&
+        isOptionalString(data, 'companyLocation', 160) &&
+        data.jobTitle is string && data.jobTitle.size() >= 1 && data.jobTitle.size() <= 180 &&
+        isOptionalString(data, 'jobDescription', 20000) &&
+        isOptionalString(data, 'jobUrl', 1000) &&
+        isOptionalString(data, 'location', 160) &&
+        isValidWorkMode(data.workMode) &&
+        isValidEmploymentType(data.employmentType) &&
+        isOptionalString(data, 'experienceRequired', 80) &&
+        isOptionalString(data, 'salary', 100) &&
+        isOptionalString(data, 'source', 100) &&
+        isOptionalString(data, 'appliedDate', 32) &&
+        isValidApplicationStatus(data.status) &&
+        isValidPriority(data.priority) &&
+        isOptionalString(data, 'resumeVersion', 160) &&
+        isOptionalString(data, 'coverLetter', 15000) &&
+        isOptionalString(data, 'recruiterName', 120) &&
+        isOptionalString(data, 'recruiterEmail', 254) &&
+        isOptionalString(data, 'recruiterLinkedinUrl', 500) &&
+        isOptionalString(data, 'notes', 15000) &&
+        isOptionalString(data, 'nextFollowUpDate', 32) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    function isValidActivityType(t) {
+      return t in [
+        'APPLICATION_CREATED',
+        'APPLICATION_UPDATED',
+        'APPLICATION_SUBMITTED',
+        'STATUS_CHANGED',
+        'INTERVIEW_SCHEDULED',
+        'INTERVIEW_COMPLETED',
+        'RECRUITER_CONTACTED',
+        'FOLLOW_UP_COMPLETED',
+        'OFFER_RECEIVED',
+        'APPLICATION_CLOSED'
+      ];
+    }
+
+    function isValidActivityLog(data, activityId) {
+      return data.keys().hasAll([
+          'id', 'userId', 'applicationId', 'activityType', 'description', 'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'userId', 'applicationId', 'activityType',
+          'description', 'fromStatus', 'toStatus', 'createdAt'
+        ]) &&
+        data.id == activityId &&
+        isValidId(data.id) &&
+        data.userId == request.auth.uid &&
+        isValidId(data.applicationId) &&
+        isValidActivityType(data.activityType) &&
+        data.description is string && data.description.size() >= 1 && data.description.size() <= 500 &&
+        isOptionalString(data, 'fromStatus', 60) &&
+        isOptionalString(data, 'toStatus', 60) &&
+        data.createdAt is timestamp;
+    }
+
+    // --- Collection Rules ---
+
+    // User Profiles: strict owner-only PII isolation, no list queries
+    match /users/{userId} {
+      allow get: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+      allow list: if false;
+      allow create: if isOwner(userId) &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isOwner(userId) &&
+        isValidId(userId) &&
+        isValidUserProfile(incoming(), userId) &&
+        incoming().uid == existing().uid &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        incoming().diff(existing()).affectedKeys().hasOnly([
+          'name', 'photoURL', 'phone', 'currentRole', 'experience',
+          'education', 'skills', 'preferredRoles', 'preferredLocations',
+          'workModePreference', 'salaryPreference', 'employmentTypePreference',
+          'weeklyApplicationGoal', 'updatedAt'
+        ]);
+      allow delete: if isOwner(userId) && isValidId(userId);
+    }
+
+    // Job Applications: strict owner isolation & action-based updates
+    match /applications/{applicationId} {
+      allow get: if isVerified() && isValidId(applicationId) && existing().userId == request.auth.uid;
+      allow list: if isVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() &&
+        isValidId(applicationId) &&
+        isValidApplication(incoming(), applicationId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isVerified() &&
+        isValidId(applicationId) &&
+        isValidApplication(incoming(), applicationId) &&
+        existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          // Action 1: Quick status transition (Kanban or status selector)
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'appliedDate', 'updatedAt']) ||
+          // Action 2: Quick priority toggle
+          incoming().diff(existing()).affectedKeys().hasOnly(['priority', 'updatedAt']) ||
+          // Action 3: Edit application details
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'companyName', 'companyLogo', 'companyWebsite', 'industry', 'companyLocation',
+            'jobTitle', 'jobDescription', 'jobUrl', 'location', 'workMode', 'employmentType',
+            'experienceRequired', 'salary', 'source', 'appliedDate', 'status', 'priority',
+            'resumeVersion', 'coverLetter', 'recruiterName', 'recruiterEmail',
+            'recruiterLinkedinUrl', 'notes', 'nextFollowUpDate', 'updatedAt'
+          ])
+        );
+      allow delete: if isVerified() && isValidId(applicationId) && existing().userId == request.auth.uid;
+    }
+
+    // Application Activity Timeline: immutable audit trail linked to an owned application
+    match /activityLogs/{activityId} {
+      allow get: if isVerified() && isValidId(activityId) && existing().userId == request.auth.uid;
+      allow list: if isVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() &&
+        isValidId(activityId) &&
+        isValidActivityLog(incoming(), activityId) &&
+        incoming().createdAt == request.time &&
+        existsAfter(/databases/$(database)/documents/applications/$(incoming().applicationId)) &&
+        getAfter(/databases/$(database)/documents/applications/$(incoming().applicationId)).data.userId == request.auth.uid;
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(activityId) && existing().userId == request.auth.uid;
+    }
+
+    function isValidInterviewType(t) {
+      return t in [
+        'HR',
+        'Technical',
+        'Coding assessment',
+        'Managerial',
+        'System design',
+        'Final interview',
+        'Other'
+      ];
+    }
+
+    function isValidInterviewStatus(s) {
+      return s in ['Scheduled', 'Completed', 'Rescheduled', 'Cancelled'];
+    }
+
+    function isValidInterviewResult(r) {
+      return r in ['Pending', 'Passed', 'Failed', 'On Hold'];
+    }
+
+    function isValidChecklist(data) {
+      return !('preparationChecklist' in data) || (
+        data.preparationChecklist is list &&
+        data.preparationChecklist.size() <= 25 &&
+        (
+          data.preparationChecklist.size() == 0 || (
+            data.preparationChecklist[0] is map &&
+            data.preparationChecklist[0].keys().hasAll(['id', 'label', 'done']) &&
+            data.preparationChecklist[0].keys().hasOnly(['id', 'label', 'done']) &&
+            isValidId(data.preparationChecklist[0].id) &&
+            data.preparationChecklist[0].label is string &&
+            data.preparationChecklist[0].label.size() >= 1 &&
+            data.preparationChecklist[0].label.size() <= 200 &&
+            data.preparationChecklist[0].done is bool
+          )
+        )
+      );
+    }
+
+    function isValidInterview(data, interviewId) {
+      return data.keys().hasAll([
+          'id', 'userId', 'applicationId', 'roundName', 'interviewType',
+          'scheduledAt', 'status', 'result', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'userId', 'applicationId', 'roundName', 'interviewType',
+          'scheduledAt', 'durationMinutes', 'interviewer', 'meetingUrl',
+          'status', 'topicsToRevise', 'questionsToPractice',
+          'preparationChecklist', 'preparationNotes', 'questionsAsked',
+          'feedback', 'result', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id == interviewId &&
+        isValidId(data.id) &&
+        data.userId == request.auth.uid &&
+        isValidId(data.applicationId) &&
+        data.roundName is string && data.roundName.size() >= 1 && data.roundName.size() <= 120 &&
+        isValidInterviewType(data.interviewType) &&
+        data.scheduledAt is string && data.scheduledAt.size() >= 1 && data.scheduledAt.size() <= 40 &&
+        (!('durationMinutes' in data) || (data.durationMinutes is number && data.durationMinutes >= 10 && data.durationMinutes <= 480)) &&
+        isOptionalString(data, 'interviewer', 160) &&
+        isOptionalString(data, 'meetingUrl', 1000) &&
+        isValidInterviewStatus(data.status) &&
+        isValidStringList(data, 'topicsToRevise', 20, 120) &&
+        isValidStringList(data, 'questionsToPractice', 20, 300) &&
+        isValidChecklist(data) &&
+        isOptionalString(data, 'preparationNotes', 15000) &&
+        isOptionalString(data, 'questionsAsked', 15000) &&
+        isOptionalString(data, 'feedback', 15000) &&
+        isValidInterviewResult(data.result) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // Interview Rounds: strictly owned and relationally tied to an owned application
+    match /interviews/{interviewId} {
+      allow get: if isVerified() && isValidId(interviewId) && existing().userId == request.auth.uid;
+      allow list: if isVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() &&
+        isValidId(interviewId) &&
+        isValidInterview(incoming(), interviewId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        existsAfter(/databases/$(database)/documents/applications/$(incoming().applicationId)) &&
+        getAfter(/databases/$(database)/documents/applications/$(incoming().applicationId)).data.userId == request.auth.uid;
+      allow update: if isVerified() &&
+        isValidId(interviewId) &&
+        isValidInterview(incoming(), interviewId) &&
+        existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        incoming().id == existing().id &&
+        incoming().applicationId == existing().applicationId &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          // Action 1: Quick status/result update
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'result', 'updatedAt']) ||
+          // Action 2: Preparation workspace update
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'topicsToRevise', 'questionsToPractice', 'preparationChecklist', 'preparationNotes', 'updatedAt'
+          ]) ||
+          // Action 3: Post-interview feedback update
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'status', 'questionsAsked', 'feedback', 'result', 'updatedAt'
+          ]) ||
+          // Action 4: Full interview details edit
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'roundName', 'interviewType', 'scheduledAt', 'durationMinutes', 'interviewer',
+            'meetingUrl', 'status', 'topicsToRevise', 'questionsToPractice',
+            'preparationChecklist', 'preparationNotes', 'questionsAsked',
+            'feedback', 'result', 'updatedAt'
+          ])
+        );
+      allow delete: if isVerified() && isValidId(interviewId) && existing().userId == request.auth.uid;
+    }
+
+    function isValidTaskCategory(c) {
+      return c in [
+        'Recruiter follow-up',
+        'Interview preparation',
+        'Assessment deadline',
+        'Resume update',
+        'Research company',
+        'Other'
+      ];
+    }
+
+    function isValidTaskStatus(s) {
+      return s in ['Pending', 'In Progress', 'Completed'];
+    }
+
+    function isValidOptionalAppRef(appId) {
+      return appId == '' || (
+        isValidId(appId) &&
+        existsAfter(/databases/$(database)/documents/applications/$(appId)) &&
+        getAfter(/databases/$(database)/documents/applications/$(appId)).data.userId == request.auth.uid
+      );
+    }
+
+    function isValidTask(data, taskId) {
+      return data.keys().hasAll([
+          'id', 'userId', 'applicationId', 'title', 'category',
+          'priority', 'status', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'userId', 'applicationId', 'title', 'description',
+          'category', 'dueDate', 'reminderDate', 'priority', 'status',
+          'completedAt', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id == taskId &&
+        isValidId(data.id) &&
+        data.userId == request.auth.uid &&
+        data.applicationId is string && data.applicationId.size() <= 128 &&
+        (data.applicationId == '' || isValidId(data.applicationId)) &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 200 &&
+        isOptionalString(data, 'description', 5000) &&
+        isValidTaskCategory(data.category) &&
+        isOptionalString(data, 'dueDate', 32) &&
+        isOptionalString(data, 'reminderDate', 32) &&
+        isValidPriority(data.priority) &&
+        isValidTaskStatus(data.status) &&
+        isOptionalString(data, 'completedAt', 40) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // Tasks & Follow-up Reminders: strict owner isolation & optional relational app check
+    match /tasks/{taskId} {
+      allow get: if isVerified() && isValidId(taskId) && existing().userId == request.auth.uid;
+      allow list: if isVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() &&
+        isValidId(taskId) &&
+        isValidTask(incoming(), taskId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time &&
+        isValidOptionalAppRef(incoming().applicationId);
+      allow update: if isVerified() &&
+        isValidId(taskId) &&
+        isValidTask(incoming(), taskId) &&
+        existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time &&
+        (incoming().applicationId == existing().applicationId || isValidOptionalAppRef(incoming().applicationId)) && (
+          // Action 1: Quick status / completion toggle
+          incoming().diff(existing()).affectedKeys().hasOnly(['status', 'completedAt', 'updatedAt']) ||
+          // Action 2: Full task details edit
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'applicationId', 'title', 'description', 'category', 'dueDate',
+            'reminderDate', 'priority', 'status', 'completedAt', 'updatedAt'
+          ])
+        );
+      allow delete: if isVerified() && isValidId(taskId) && existing().userId == request.auth.uid;
+    }
+
+    function isValidDocumentType(t) {
+      return t in ['Resume', 'Cover Letter', 'Certificate', 'Supporting Document'];
+    }
+
+    function isValidDocumentRecord(data, documentId) {
+      return data.keys().hasAll([
+          'id', 'userId', 'name', 'documentType', 'version', 'createdAt', 'updatedAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'userId', 'name', 'documentType', 'version', 'fileName', 'fileType',
+          'fileSize', 'localStorageReference', 'skills', 'experience', 'content',
+          'notes', 'createdAt', 'updatedAt'
+        ]) &&
+        data.id == documentId &&
+        isValidId(data.id) &&
+        data.userId == request.auth.uid &&
+        data.name is string && data.name.size() >= 1 && data.name.size() <= 160 &&
+        isValidDocumentType(data.documentType) &&
+        data.version is string && data.version.size() >= 1 && data.version.size() <= 40 &&
+        isOptionalString(data, 'fileName', 260) &&
+        isOptionalString(data, 'fileType', 120) &&
+        (!('fileSize' in data) || (data.fileSize is number && data.fileSize >= 0 && data.fileSize <= 15728640)) &&
+        isOptionalString(data, 'localStorageReference', 128) &&
+        isValidStringList(data, 'skills', 30, 80) &&
+        isOptionalString(data, 'experience', 120) &&
+        isOptionalString(data, 'content', 30000) &&
+        isOptionalString(data, 'notes', 5000) &&
+        data.createdAt is timestamp &&
+        data.updatedAt is timestamp;
+    }
+
+    // Resume & Document Metadata: strict owner isolation (binary blobs stored locally in IndexedDB)
+    match /documents/{documentId} {
+      allow get: if isVerified() && isValidId(documentId) && existing().userId == request.auth.uid;
+      allow list: if isVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() &&
+        isValidId(documentId) &&
+        isValidDocumentRecord(incoming(), documentId) &&
+        incoming().createdAt == request.time &&
+        incoming().updatedAt == request.time;
+      allow update: if isVerified() &&
+        isValidId(documentId) &&
+        isValidDocumentRecord(incoming(), documentId) &&
+        existing().userId == request.auth.uid &&
+        incoming().userId == existing().userId &&
+        incoming().id == existing().id &&
+        incoming().createdAt == existing().createdAt &&
+        incoming().updatedAt == request.time && (
+          // Action 1: Full document metadata update
+          incoming().diff(existing()).affectedKeys().hasOnly([
+            'name', 'documentType', 'version', 'fileName', 'fileType', 'fileSize',
+            'localStorageReference', 'skills', 'experience', 'content', 'notes', 'updatedAt'
+          ])
+        );
+      allow delete: if isVerified() && isValidId(documentId) && existing().userId == request.auth.uid;
+    }
+
+    function isValidAiOperationType(t) {
+      return t in [
+        'RESUME_ANALYSIS',
+        'JD_ANALYSIS',
+        'RESUME_JOB_MATCH',
+        'COVER_LETTER',
+        'INTERVIEW_QUESTIONS'
+      ];
+    }
+
+    function isValidAiHistoryItem(data, historyId) {
+      return data.keys().hasAll([
+          'id', 'userId', 'applicationId', 'operationType',
+          'title', 'inputSummary', 'result', 'createdAt'
+        ]) &&
+        data.keys().hasOnly([
+          'id', 'userId', 'applicationId', 'operationType',
+          'title', 'inputSummary', 'result', 'createdAt'
+        ]) &&
+        data.id == historyId &&
+        isValidId(data.id) &&
+        data.userId == request.auth.uid &&
+        data.applicationId is string && data.applicationId.size() <= 128 &&
+        (data.applicationId == '' || isValidId(data.applicationId)) &&
+        isValidAiOperationType(data.operationType) &&
+        data.title is string && data.title.size() >= 1 && data.title.size() <= 180 &&
+        data.inputSummary is string && data.inputSummary.size() >= 1 && data.inputSummary.size() <= 500 &&
+        data.result is map && data.result.keys().size() >= 1 && data.result.keys().size() <= 12 &&
+        data.createdAt is timestamp;
+    }
+
+    // AI History (User-consented saved AI analyses): immutable once saved, owner-only read/delete
+    match /aiHistory/{historyId} {
+      allow get: if isVerified() && isValidId(historyId) && existing().userId == request.auth.uid;
+      allow list: if isVerified() && resource.data.userId == request.auth.uid;
+      allow create: if isVerified() &&
+        isValidId(historyId) &&
+        isValidAiHistoryItem(incoming(), historyId) &&
+        incoming().createdAt == request.time &&
+        isValidOptionalAppRef(incoming().applicationId);
+      allow update: if false;
+      allow delete: if isVerified() && isValidId(historyId) && existing().userId == request.auth.uid;
+    }
+  }
+}
