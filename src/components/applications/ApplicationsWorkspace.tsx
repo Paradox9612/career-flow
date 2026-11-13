@@ -296,7 +296,7 @@ export function ApplicationsWorkspace({
                 setGroupAndSync(item.key);
                 setPage(1);
               }}
-              className={`text-left rounded-xl border px-5 py-4 transition-colors cursor-pointer ${
+              className={`text-left rounded-xl border px-4 py-3.5 sm:px-5 sm:py-4 transition-colors cursor-pointer ${
                 isSelected
                   ? 'border-blue-600 bg-blue-50/40 dark:bg-blue-950/20'
                   : 'border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-slate-700'
@@ -323,9 +323,9 @@ export function ApplicationsWorkspace({
       )}
 
       {/* Filter & View Bar */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 space-y-3">
+      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 space-y-3">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-          <div className="relative flex-1 max-w-md">
+          <div className="relative flex-1 w-full lg:max-w-md">
             <Search className="h-4 w-4 text-slate-400 absolute left-3 top-3" />
             <Input
               value={searchQuery}
@@ -339,7 +339,7 @@ export function ApplicationsWorkspace({
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+            <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg flex-1 sm:flex-initial">
               {(
                 [
                   { id: 'table', label: 'Table', Icon: Table2 },
@@ -351,7 +351,7 @@ export function ApplicationsWorkspace({
                   key={id}
                   type="button"
                   onClick={() => onViewModeChange(id)}
-                  className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+                  className={`flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                     viewMode === id
                       ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
                       : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -377,7 +377,7 @@ export function ApplicationsWorkspace({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2.5 pt-1">
           <Select
             aria-label="Filter by status"
             value={statusFilter}
@@ -519,7 +519,7 @@ export function ApplicationsWorkspace({
           {paginatedRows.map((app) => (
             <div
               key={app.id}
-              className="px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
+              className="px-4 sm:px-5 py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 hover:bg-slate-50/70 dark:hover:bg-slate-800/40 transition-colors"
             >
               <button
                 type="button"
@@ -558,12 +558,12 @@ export function ApplicationsWorkspace({
                 </div>
               </button>
 
-              <div className="flex items-center gap-2 shrink-0">
+              <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">
                 <Select
                   aria-label={`Status for ${app.jobTitle}`}
                   value={app.status}
                   onChange={(e) => onStatusChange(app, e.target.value as ApplicationStatus)}
-                  className="h-9 text-xs w-[165px]"
+                  className="h-9 text-xs flex-1 min-w-[140px] sm:flex-initial sm:w-[165px]"
                 >
                   {APPLICATION_STATUSES.map((s) => (
                     <option key={s} value={s}>
@@ -595,9 +595,101 @@ export function ApplicationsWorkspace({
           ))}
         </div>
       ) : (
-        /* Table View */
+        /* Table View (Responsive Mobile Cards + Desktop Table) */
         <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="md:hidden divide-y divide-slate-200 dark:divide-slate-800">
+            {paginatedRows.map((app) => {
+              const jobHref = ensureExternalHref(app.jobUrl);
+              return (
+                <div key={app.id} className="p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <button
+                      type="button"
+                      onClick={() => onSelectApplication(app)}
+                      className="text-left min-w-0 flex-1 cursor-pointer group"
+                    >
+                      <p className="text-sm font-semibold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                        {app.jobTitle}
+                      </p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                        {app.companyName}
+                        {app.location ? ` · ${app.location}` : ''}
+                        {app.salary ? ` · ${app.salary}` : ''}
+                      </p>
+                    </button>
+                    <span className={`text-xs font-medium shrink-0 ${PRIORITY_META[app.priority].textClass}`}>
+                      {app.priority}
+                    </span>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 dark:text-slate-400">
+                    <span>{app.workMode} · {app.employmentType}</span>
+                    {app.appliedDate && (
+                      <span className="font-mono tabular-nums">
+                        Applied {formatShortDate(app.appliedDate)}
+                      </span>
+                    )}
+                    {app.nextFollowUpDate && (
+                      <span className="font-mono tabular-nums text-amber-700 dark:text-amber-400">
+                        Follow-up {formatShortDate(app.nextFollowUpDate)}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className="flex items-center justify-between gap-2 pt-1">
+                    <select
+                      aria-label={`Change status for ${app.jobTitle}`}
+                      value={app.status}
+                      onChange={(e) =>
+                        onStatusChange(app, e.target.value as ApplicationStatus)
+                      }
+                      className={`h-9 flex-1 min-w-0 rounded-md border border-slate-200 dark:border-slate-800 bg-transparent px-2.5 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
+                        STATUS_META[app.status].toneClass
+                      }`}
+                    >
+                      {APPLICATION_STATUSES.map((s) => (
+                        <option key={s} value={s} className="text-slate-900 bg-white dark:bg-slate-900 dark:text-slate-100">
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+
+                    <div className="inline-flex items-center gap-1 shrink-0">
+                      {jobHref && (
+                        <a
+                          href={jobHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Open external posting for ${app.jobTitle}`}
+                          className="h-9 w-9 inline-flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </a>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => onEditClick(app)}
+                        aria-label={`Edit ${app.jobTitle}`}
+                        className="h-9 w-9 inline-flex items-center justify-center rounded-md text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                      >
+                        <Edit3 className="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPendingDelete(app)}
+                        aria-label={`Delete ${app.jobTitle}`}
+                        className="h-9 w-9 inline-flex items-center justify-center rounded-md text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/80 text-xs font-medium text-slate-500 dark:text-slate-400">
@@ -709,7 +801,7 @@ export function ApplicationsWorkspace({
       {/* Pagination Footer (Table & List views) */}
       {filtered.length > 0 && viewMode !== 'kanban' && (
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-500 dark:text-slate-400">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <span>Rows per page:</span>
             <Select
               aria-label="Rows per page"
@@ -730,7 +822,7 @@ export function ApplicationsWorkspace({
             </span>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center justify-between sm:justify-end gap-1.5">
             <Button
               type="button"
               variant="outline"

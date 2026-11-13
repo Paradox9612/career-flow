@@ -215,7 +215,7 @@ export function InterviewsPage({
 
       {/* Controls */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-fit">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-full sm:w-fit overflow-x-auto max-w-full">
           {(
             [
               { id: 'upcoming', label: `Upcoming (${summary.upcoming})` },
@@ -407,7 +407,7 @@ export function InterviewsPage({
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 shrink-0">
+                    <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto shrink-0">
                       {meetingHref && (
                         <a
                           href={meetingHref}
@@ -428,7 +428,7 @@ export function InterviewsPage({
                         onChange={(e) =>
                           handleQuickStatus(item, e.target.value as InterviewStatus)
                         }
-                        className={`h-8 text-xs w-32 ${INTERVIEW_STATUS_META[item.status].toneClass}`}
+                        className={`h-8 text-xs flex-1 min-w-[120px] sm:flex-initial sm:w-32 ${INTERVIEW_STATUS_META[item.status].toneClass}`}
                       >
                         {INTERVIEW_STATUSES.map((s) => (
                           <option key={s} value={s}>

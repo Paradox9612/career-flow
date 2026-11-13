@@ -380,9 +380,9 @@ export function InterviewFormModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+          <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
             <span className="text-xs text-slate-400">Fields marked with * are required.</span>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center justify-end gap-2">
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>

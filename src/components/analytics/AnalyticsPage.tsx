@@ -126,14 +126,14 @@ export function AnalyticsPage({
       </div>
 
       {/* Date Range Filters */}
-      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 print:hidden">
-        <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-fit">
+      <div className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3.5 sm:p-4 flex flex-col md:flex-row md:items-center justify-between gap-3 print:hidden">
+        <div className="flex flex-wrap items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-full sm:w-fit">
           {RANGE_OPTIONS.map((opt) => (
             <button
               key={opt.id}
               type="button"
               onClick={() => setRange(opt.id)}
-              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+              className={`flex-1 sm:flex-initial px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
                 range === opt.id
                   ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
                   : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -145,21 +145,25 @@ export function AnalyticsPage({
         </div>
 
         {range === 'custom' && (
-          <div className="flex flex-wrap items-center gap-2 text-xs">
-            <span className="text-slate-500">From</span>
-            <Input
-              type="date"
-              value={customStart}
-              onChange={(e) => setCustomStart(e.target.value)}
-              className="h-9 w-40 text-xs"
-            />
-            <span className="text-slate-500">To</span>
-            <Input
-              type="date"
-              value={customEnd}
-              onChange={(e) => setCustomEnd(e.target.value)}
-              className="h-9 w-40 text-xs"
-            />
+          <div className="grid grid-cols-1 sm:flex sm:items-center gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-slate-500 w-9 sm:w-auto">From</span>
+              <Input
+                type="date"
+                value={customStart}
+                onChange={(e) => setCustomStart(e.target.value)}
+                className="h-9 flex-1 sm:w-40 text-xs"
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-500 w-9 sm:w-auto">To</span>
+              <Input
+                type="date"
+                value={customEnd}
+                onChange={(e) => setCustomEnd(e.target.value)}
+                className="h-9 flex-1 sm:w-40 text-xs"
+              />
+            </div>
           </div>
         )}
       </div>
@@ -200,7 +204,7 @@ export function AnalyticsPage({
             ].map((m) => (
               <div
                 key={m.label}
-                className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-5 py-4"
+                className="rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-3.5 sm:px-5 sm:py-4"
               >
                 <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
                   {m.label}
@@ -213,7 +217,7 @@ export function AnalyticsPage({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            <Card className="lg:col-span-7">
+            <Card className="lg:col-span-7 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Monthly Activity</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -267,7 +271,7 @@ export function AnalyticsPage({
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-5">
+            <Card className="lg:col-span-5 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Pipeline Outcomes Breakdown</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -325,7 +329,7 @@ export function AnalyticsPage({
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            <Card className="lg:col-span-6">
+            <Card className="lg:col-span-6 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Interview Conversion Funnel</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -338,7 +342,7 @@ export function AnalyticsPage({
                     <BarChart
                       data={funnelData}
                       layout="vertical"
-                      margin={{ top: 4, right: 24, left: 16, bottom: 4 }}
+                      margin={{ top: 4, right: 16, left: 4, bottom: 4 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.35} horizontal={false} />
                       <XAxis
@@ -351,8 +355,8 @@ export function AnalyticsPage({
                       <YAxis
                         type="category"
                         dataKey="stage"
-                        width={84}
-                        tick={{ fontSize: 12, fill: '#64748b' }}
+                        width={76}
+                        tick={{ fontSize: 11, fill: '#64748b' }}
                         axisLine={false}
                         tickLine={false}
                       />
@@ -374,7 +378,7 @@ export function AnalyticsPage({
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-6">
+            <Card className="lg:col-span-6 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Application Source Performance</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -386,11 +390,11 @@ export function AnalyticsPage({
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="border-b border-slate-200 dark:border-slate-800 text-xs font-medium text-slate-500 dark:text-slate-400">
-                        <th className="py-3 pl-6 pr-3">Source</th>
-                        <th className="py-3 px-3 text-right">Applications</th>
-                        <th className="py-3 px-3 text-right">Interviews</th>
-                        <th className="py-3 px-3 text-right">Offers</th>
-                        <th className="py-3 pl-3 pr-6 text-right">Interview Rate</th>
+                        <th className="py-3 pl-4 sm:pl-6 pr-3 whitespace-nowrap">Source</th>
+                        <th className="py-3 px-3 text-right whitespace-nowrap">Apps</th>
+                        <th className="py-3 px-3 text-right whitespace-nowrap">Interviews</th>
+                        <th className="py-3 px-3 text-right whitespace-nowrap">Offers</th>
+                        <th className="py-3 pl-3 pr-4 sm:pr-6 text-right whitespace-nowrap">Rate</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-sm">
@@ -428,12 +432,13 @@ export function AnalyticsPage({
               </p>
             </CardHeader>
             <CardContent>
-              <div className="h-[240px] w-full">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={statusData}
-                    margin={{ top: 8, right: 16, left: -16, bottom: 20 }}
-                  >
+              <div className="overflow-x-auto">
+                <div className="h-[250px] min-w-[540px] sm:min-w-0 w-full">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={statusData}
+                      margin={{ top: 8, right: 16, left: -16, bottom: 20 }}
+                    >
                     <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.35} />
                     <XAxis
                       dataKey="status"
@@ -465,6 +470,7 @@ export function AnalyticsPage({
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
+                </div>
               </div>
             </CardContent>
           </Card>

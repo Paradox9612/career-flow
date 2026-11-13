@@ -301,7 +301,7 @@ export function DocumentFormModal({
 
         {/* Local File Attachment */}
         <div className="space-y-2">
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-1.5">
             <Label htmlFor="doc-file">File Attachment (Stored Locally in Browser)</Label>
             <span className="text-[11px] text-slate-400">
               PDF, DOC, DOCX, TXT, MD, PNG, JPG · Max 10 MB
@@ -424,6 +424,7 @@ export function DocumentFormModal({
                   }
                 }}
                 placeholder="React, TypeScript, GraphQL"
+                className="min-w-0 flex-1"
               />
               <Button type="button" variant="outline" size="sm" onClick={handleAddSkills}>
                 <Plus className="h-4 w-4" />
@@ -454,7 +455,7 @@ export function DocumentFormModal({
         )}
 
         <div>
-          <div className="flex items-center justify-between gap-2 mb-1">
+          <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1">
             <Label htmlFor="doc-content">
               {watchDocType === 'Cover Letter'
                 ? 'Cover Letter Body / Text Content'
@@ -486,11 +487,11 @@ export function DocumentFormModal({
           />
         </div>
 
-        <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
           <span className="text-xs text-slate-400">
             Metadata syncs via Firestore · Files stay in this browser.
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>

@@ -243,7 +243,7 @@ export function InterviewDetailView({
           <span>Back</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {meetingHref && (
             <a
               href={meetingHref}
@@ -283,16 +283,16 @@ export function InterviewDetailView({
       )}
 
       <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-            <div className="space-y-2">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5 sm:gap-6">
+            <div className="space-y-2 min-w-0">
               <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
                 {application ? (
                   onSelectApplication ? (
                     <button
                       type="button"
                       onClick={() => onSelectApplication(application.id)}
-                      className="font-medium text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
+                      className="font-medium text-blue-600 dark:text-blue-400 hover:underline cursor-pointer text-left"
                     >
                       {application.companyName} — {application.jobTitle}
                     </button>
@@ -308,7 +308,7 @@ export function InterviewDetailView({
                 <span>{interview.interviewType}</span>
               </div>
 
-              <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+              <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white break-words">
                 {interview.roundName}
               </h1>
 
@@ -330,8 +330,8 @@ export function InterviewDetailView({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:flex sm:items-center gap-3 shrink-0">
-              <div className="min-w-[150px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:items-center gap-3 shrink-0">
+              <div className="sm:min-w-[150px]">
                 <span className="block text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                   Interview Status
                 </span>
@@ -350,7 +350,7 @@ export function InterviewDetailView({
                 </Select>
               </div>
 
-              <div className="min-w-[130px]">
+              <div className="sm:min-w-[130px]">
                 <span className="block text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                   Outcome
                 </span>
@@ -375,8 +375,8 @@ export function InterviewDetailView({
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Preparation Workspace */}
-        <Card className="lg:col-span-7">
-          <CardHeader className="flex flex-row items-center justify-between gap-3">
+        <Card className="lg:col-span-7 min-w-0">
+          <CardHeader className="flex flex-wrap items-center justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold">Interview Preparation</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -614,7 +614,7 @@ export function InterviewDetailView({
         </Card>
 
         {/* Post-Interview Feedback */}
-        <Card className="lg:col-span-5">
+        <Card className="lg:col-span-5 min-w-0">
           <CardHeader>
             <h2 className="text-base font-semibold">Post-Interview Feedback</h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -631,7 +631,7 @@ export function InterviewDetailView({
               </div>
             )}
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="fb-status">Round Status</Label>
                 <Select

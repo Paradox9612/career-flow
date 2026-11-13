@@ -91,6 +91,7 @@ function TagEditor({
           }}
           placeholder={placeholder}
           disabled={items.length >= maxItems}
+          className="min-w-0 flex-1"
         />
         <Button
           type="button"
@@ -290,8 +291,8 @@ export function ProfilePage() {
                   {(form.watch('name') || user?.email || 'U').slice(0, 1).toUpperCase()}
                 </div>
               )}
-              <div className="text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
-                <p className="text-sm font-medium text-slate-900 dark:text-slate-100">
+              <div className="min-w-0 flex-1 text-xs text-slate-500 dark:text-slate-400 space-y-0.5">
+                <p className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
                   {user?.email}
                 </p>
                 <p>Verified account · Signed in via {user?.providerData[0]?.providerId === 'google.com' ? 'Google' : 'Email'}</p>
@@ -506,7 +507,7 @@ export function ProfilePage() {
             onChange={(e) => setDeleteConfirmText(e.target.value)}
             placeholder="Type DELETE to confirm"
           />
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex flex-wrap justify-end gap-2 pt-2">
             <Button type="button" variant="outline" onClick={() => setDeleteModalOpen(false)}>
               Cancel
             </Button>

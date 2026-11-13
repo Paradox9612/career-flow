@@ -198,7 +198,7 @@ export function DashboardPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button type="button" variant="outline" size="sm" onClick={onOpenAnalytics}>
             <BarChart3 className="h-4 w-4" />
             <span>Full Analytics</span>
@@ -261,9 +261,9 @@ export function DashboardPage({
         <>
           {/* Row 1: Weekly Goal + Application Trend */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            <Card className="lg:col-span-4 flex flex-col justify-between">
-              <CardHeader className="flex flex-row items-center justify-between gap-2">
-                <div>
+            <Card className="lg:col-span-4 min-w-0 flex flex-col justify-between">
+              <CardHeader className="flex flex-wrap items-start justify-between gap-2">
+                <div className="min-w-0">
                   <h2 className="text-base font-semibold">Weekly Application Goal</h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                     Monday–Sunday submission pacing
@@ -274,7 +274,7 @@ export function DashboardPage({
                     type="button"
                     onClick={() => setEditingGoal(true)}
                     aria-label="Edit weekly target"
-                    className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                    className="h-8 px-2.5 inline-flex items-center gap-1.5 rounded-md text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer shrink-0"
                   >
                     <Edit2 className="h-3.5 w-3.5" />
                     <span>Edit target</span>
@@ -283,7 +283,7 @@ export function DashboardPage({
               </CardHeader>
               <CardContent className="space-y-5 flex-1 flex flex-col justify-between">
                 {editingGoal ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <Input
                       type="number"
                       min={1}
@@ -381,7 +381,7 @@ export function DashboardPage({
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-8">
+            <Card className="lg:col-span-8 min-w-0">
               <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
                   <h2 className="text-base font-semibold">Application Trend</h2>
@@ -469,7 +469,7 @@ export function DashboardPage({
 
           {/* Row 2: Application Funnel + Status Distribution */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
-            <Card className="lg:col-span-6">
+            <Card className="lg:col-span-6 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Application Funnel</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -477,12 +477,12 @@ export function DashboardPage({
                 </p>
               </CardHeader>
               <CardContent>
-                <div className="h-[260px] w-full">
+                <div className="h-[250px] sm:h-[260px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={funnelData}
                       layout="vertical"
-                      margin={{ top: 4, right: 24, left: 16, bottom: 4 }}
+                      margin={{ top: 4, right: 16, left: 4, bottom: 4 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.35} horizontal={false} />
                       <XAxis
@@ -495,8 +495,8 @@ export function DashboardPage({
                       <YAxis
                         type="category"
                         dataKey="stage"
-                        width={84}
-                        tick={{ fontSize: 12, fill: '#64748b' }}
+                        width={76}
+                        tick={{ fontSize: 11, fill: '#64748b' }}
                         axisLine={false}
                         tickLine={false}
                       />
@@ -518,7 +518,7 @@ export function DashboardPage({
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-6">
+            <Card className="lg:col-span-6 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Status Distribution</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -526,12 +526,12 @@ export function DashboardPage({
                 </p>
               </CardHeader>
               <CardContent>
-                <div className="h-[260px] w-full">
+                <div className="h-[250px] sm:h-[260px] w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <BarChart
                       data={statusData}
                       layout="vertical"
-                      margin={{ top: 4, right: 24, left: 24, bottom: 4 }}
+                      margin={{ top: 4, right: 16, left: 4, bottom: 4 }}
                     >
                       <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" opacity={0.35} horizontal={false} />
                       <XAxis
@@ -544,7 +544,7 @@ export function DashboardPage({
                       <YAxis
                         type="category"
                         dataKey="status"
-                        width={126}
+                        width={108}
                         tick={{ fontSize: 11, fill: '#64748b' }}
                         axisLine={false}
                         tickLine={false}
@@ -571,8 +571,8 @@ export function DashboardPage({
 
           {/* Row 3: Upcoming Reminders + Recent Activity */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            <Card className="lg:col-span-6">
-              <CardHeader className="flex flex-row items-center justify-between gap-2">
+            <Card className="lg:col-span-6 min-w-0">
+              <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
                   <h2 className="text-base font-semibold">Upcoming Interviews, Tasks & Follow-ups</h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -610,21 +610,21 @@ export function DashboardPage({
                             <button
                               type="button"
                               onClick={() => onSelectInterview(round)}
-                              className="w-full flex items-center justify-between gap-3 text-left group cursor-pointer"
+                              className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3 text-left group cursor-pointer"
                             >
                               <div className="min-w-0">
                                 <p className="text-sm font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
                                   {round.roundName}
                                   {linkedApp ? ` — ${linkedApp.companyName}` : ''}
                                 </p>
-                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1.5">
+                                <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex flex-wrap items-center gap-1.5">
                                   <CalendarClock className="h-3 w-3 text-blue-600 dark:text-blue-400 shrink-0" />
                                   <span>{round.interviewType}</span>
                                   <span aria-hidden="true">·</span>
                                   <span>{round.status}</span>
                                 </p>
                               </div>
-                              <div className="text-right shrink-0">
+                              <div className="text-left sm:text-right shrink-0">
                                 <p className="text-xs font-mono tabular-nums text-blue-600 dark:text-blue-400 font-medium">
                                   {formatDateTime(round.scheduledAt)}
                                 </p>
@@ -655,7 +655,7 @@ export function DashboardPage({
                         return (
                           <li
                             key={task.id}
-                            className="py-2.5 first:pt-0 last:pb-0 flex items-center justify-between gap-3"
+                            className="py-2.5 first:pt-0 last:pb-0 flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-3"
                           >
                             <div className="flex items-start gap-2.5 min-w-0">
                               <button
@@ -684,7 +684,7 @@ export function DashboardPage({
                             </div>
 
                             {task.dueDate && (
-                              <div className="text-right shrink-0">
+                              <div className="pl-6.5 sm:pl-0 text-left sm:text-right shrink-0 flex sm:block items-center gap-2">
                                 <p
                                   className={`text-xs font-medium ${
                                     overdue
@@ -721,13 +721,13 @@ export function DashboardPage({
                           <button
                             type="button"
                             onClick={() => onSelectApplication(item.application.id)}
-                            className="w-full flex items-center justify-between gap-3 text-left group cursor-pointer"
+                            className="w-full flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3 text-left group cursor-pointer"
                           >
                             <div className="min-w-0">
                               <p className="text-sm font-medium text-slate-900 dark:text-slate-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 truncate">
                                 {item.application.jobTitle} — {item.application.companyName}
                               </p>
-                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-2">
+                              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex flex-wrap items-center gap-2">
                                 <span>
                                   {item.kind === 'followUp'
                                     ? 'Recruiter follow-up'
@@ -738,7 +738,7 @@ export function DashboardPage({
                               </p>
                             </div>
 
-                            <div className="text-right shrink-0">
+                            <div className="text-left sm:text-right shrink-0 flex sm:block items-center gap-2">
                               {item.dueDate ? (
                                 <>
                                   <p
@@ -756,7 +756,7 @@ export function DashboardPage({
                                       ? 'Due Today'
                                       : 'Upcoming'}
                                   </p>
-                                  <p className="text-xs font-mono tabular-nums text-slate-400 inline-flex items-center gap-1 mt-0.5">
+                                  <p className="text-xs font-mono tabular-nums text-slate-400 inline-flex items-center gap-1 sm:mt-0.5">
                                     <Calendar className="h-3 w-3" />
                                     <span>{formatShortDate(item.dueDate)}</span>
                                   </p>
@@ -783,7 +783,7 @@ export function DashboardPage({
               </CardContent>
             </Card>
 
-            <Card className="lg:col-span-6">
+            <Card className="lg:col-span-6 min-w-0">
               <CardHeader>
                 <h2 className="text-base font-semibold">Recent Activity</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">

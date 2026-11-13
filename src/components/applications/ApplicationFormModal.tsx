@@ -232,9 +232,9 @@ export function ApplicationFormModal({
                 </p>
               </div>
             </div>
-            <ul className="space-y-1 pl-6">
+            <ul className="space-y-1.5 pl-6">
               {duplicateMatches.slice(0, 3).map(({ application, reasons }) => (
-                <li key={application.id} className="flex items-center justify-between gap-2">
+                <li key={application.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2">
                   <span>
                     <strong className="font-medium">{application.companyName}</strong> —{' '}
                     {application.jobTitle} ({application.status}) · {reasons.join(', ')}
@@ -246,7 +246,7 @@ export function ApplicationFormModal({
                         onClose();
                         onInspectDuplicate(application);
                       }}
-                      className="inline-flex items-center gap-1 text-amber-800 dark:text-amber-300 underline hover:no-underline cursor-pointer shrink-0"
+                      className="inline-flex items-center gap-1 text-amber-800 dark:text-amber-300 underline hover:no-underline cursor-pointer shrink-0 self-start sm:self-auto"
                     >
                       <span>View</span>
                       <ExternalLink className="h-3 w-3" />
@@ -258,7 +258,7 @@ export function ApplicationFormModal({
           </div>
         )}
 
-        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-fit">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-full sm:w-fit overflow-x-auto max-w-full">
           {(
             [
               { id: 'core', label: 'Role & Status' },
@@ -473,8 +473,8 @@ export function ApplicationFormModal({
         {activeSection === 'recruiter' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="app-resume">Resume Version Used</Label>
+              <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1">
+                <Label htmlFor="app-resume" className="mb-0">Resume Version Used</Label>
                 {documents.filter((d) => d.documentType === 'Resume').length > 0 && (
                   <select
                     aria-label="Choose from saved resumes"
@@ -542,8 +542,8 @@ export function ApplicationFormModal({
             </div>
 
             <div className="sm:col-span-2">
-              <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="app-cover">Cover Letter</Label>
+              <div className="flex flex-wrap items-center justify-between gap-1.5 mb-1">
+                <Label htmlFor="app-cover" className="mb-0">Cover Letter</Label>
                 {documents.filter(
                   (d) => d.documentType === 'Cover Letter' && (d.content ?? '').trim().length > 0
                 ).length > 0 && (
@@ -598,11 +598,11 @@ export function ApplicationFormModal({
           </div>
         )}
 
-        <div className="flex items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
+        <div className="flex flex-col-reverse sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
           <span className="text-xs text-slate-400">
             Fields marked with * are required.
           </span>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-end gap-2">
             <Button type="button" variant="outline" onClick={onClose}>
               Cancel
             </Button>

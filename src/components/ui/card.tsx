@@ -23,7 +23,7 @@ export function CardHeader({
   return (
     <div
       className={cn(
-        'px-6 py-4 border-b border-slate-200 dark:border-slate-800',
+        'px-4 py-3.5 sm:px-6 sm:py-4 border-b border-slate-200 dark:border-slate-800',
         className
       )}
       {...props}
@@ -35,5 +35,5 @@ export function CardContent({
   className,
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('p-6', className)} {...props} />;
+  return <div className={cn('p-4 sm:p-6', className)} {...props} />;
 }

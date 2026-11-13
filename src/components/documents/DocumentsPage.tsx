@@ -353,7 +353,7 @@ export function DocumentsPage({
 
       {/* Filters */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-x-auto max-w-full w-fit">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-x-auto max-w-full w-full sm:w-fit">
           {(['All', ...DOCUMENT_TYPES] as const).map((tab) => (
             <button
               key={tab}
@@ -370,8 +370,8 @@ export function DocumentsPage({
           ))}
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="relative min-w-[220px] flex-1 sm:flex-initial">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-2.5">
+          <div className="relative min-w-0 flex-1 sm:min-w-[220px] sm:flex-initial">
             <Search className="h-3.5 w-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
             <Input
               value={searchQuery}
@@ -386,7 +386,7 @@ export function DocumentsPage({
               aria-label="Filter by skill"
               value={skillFilter}
               onChange={(e) => setSkillFilter(e.target.value)}
-              className="h-9 text-xs w-auto min-w-[145px]"
+              className="h-9 text-xs w-full sm:w-auto min-w-0 sm:min-w-[145px]"
             >
               <option value="ALL">All Skills</option>
               {allSkills.map((skill) => (
@@ -446,10 +446,10 @@ export function DocumentsPage({
               : false;
 
             return (
-              <Card key={doc.id}>
-                <CardContent className="p-5 flex flex-col justify-between gap-4 h-full">
-                  <div className="space-y-3">
-                    <div className="flex items-start justify-between gap-3">
+              <Card key={doc.id} className="min-w-0">
+                <CardContent className="p-4 sm:p-5 flex flex-col justify-between gap-4 h-full">
+                  <div className="space-y-3 min-w-0">
+                    <div className="flex items-start justify-between gap-2 sm:gap-3">
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate-500 dark:text-slate-400">
                           <span className="font-medium text-blue-700 dark:text-blue-400">
@@ -547,7 +547,7 @@ export function DocumentsPage({
 
                     {/* Linked Applications */}
                     <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-1.5">
-                      <div className="flex items-center justify-between gap-2 text-xs">
+                      <div className="flex flex-wrap items-center justify-between gap-2 text-xs">
                         <span className="inline-flex items-center gap-1.5 text-slate-600 dark:text-slate-300 font-medium">
                           <Briefcase className="h-3.5 w-3.5 text-slate-400" />
                           <span className="font-mono tabular-nums">
@@ -650,14 +650,14 @@ export function DocumentsPage({
               <iframe
                 title={previewDoc.name}
                 src={previewBlobUrl}
-                className="w-full h-[420px] rounded-lg border border-slate-200 dark:border-slate-800 bg-white"
+                className="w-full h-[55dvh] sm:h-[420px] rounded-lg border border-slate-200 dark:border-slate-800 bg-white"
               />
             ) : previewBlobUrl && isPreviewImage ? (
               <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 p-3 flex justify-center">
                 <img
                   src={previewBlobUrl}
                   alt={previewDoc.name}
-                  className="max-h-[420px] object-contain rounded"
+                  className="max-h-[55dvh] sm:max-h-[420px] object-contain rounded"
                 />
               </div>
             ) : previewDoc.localStorageReference && !previewBlobUrl ? (
@@ -665,7 +665,7 @@ export function DocumentsPage({
                 The attached binary file ({previewDoc.fileName}) is not present in this browser&apos;s IndexedDB. Edit this document to re-upload the file on this device.
               </div>
             ) : previewBlobUrl ? (
-              <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3 flex items-center justify-between gap-3">
+              <div className="rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div className="flex items-center gap-2.5 text-xs">
                   <FileText className="h-4 w-4 text-slate-500" />
                   <span>
@@ -705,7 +705,7 @@ export function DocumentsPage({
               </div>
             )}
 
-            <div className="flex justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
+            <div className="flex flex-wrap justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800">
               {previewBlobUrl && (
                 <Button
                   type="button"
@@ -763,7 +763,7 @@ export function DocumentsPage({
             </div>
           )}
 
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex flex-wrap justify-end gap-2 pt-2">
             <Button
               type="button"
               variant="outline"
@@ -798,7 +798,7 @@ export function DocumentsPage({
             </strong>
             ?
           </p>
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex flex-wrap justify-end gap-2 pt-2">
             <Button
               type="button"
               variant="outline"

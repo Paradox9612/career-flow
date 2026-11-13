@@ -53,6 +53,16 @@
     color: var(--foreground);
   }
 
+  body {
+    overflow-x: clip;
+  }
+
+  button,
+  [role="button"],
+  select {
+    touch-action: manipulation;
+  }
+
   h1, h2, h3, h4, .font-display {
     font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
   }

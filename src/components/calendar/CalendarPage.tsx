@@ -229,28 +229,30 @@ export function CalendarPage({
 
       {/* Month Toolbar & Layer Filters */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            aria-label="Previous month"
-            onClick={() => setCurrentMonth((m) => subMonths(m, 1))}
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </Button>
-          <h2 className="font-display text-lg font-semibold min-w-[160px] text-center">
-            {format(currentMonth, 'MMMM yyyy')}
-          </h2>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            aria-label="Next month"
-            onClick={() => setCurrentMonth((m) => addMonths(m, 1))}
-          >
-            <ChevronRight className="h-4 w-4" />
-          </Button>
+        <div className="flex items-center justify-between sm:justify-start gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              aria-label="Previous month"
+              onClick={() => setCurrentMonth((m) => subMonths(m, 1))}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+            <h2 className="font-display text-base sm:text-lg font-semibold min-w-[136px] sm:min-w-[160px] text-center">
+              {format(currentMonth, 'MMMM yyyy')}
+            </h2>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              aria-label="Next month"
+              onClick={() => setCurrentMonth((m) => addMonths(m, 1))}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
           <Button
             type="button"
             variant="ghost"
@@ -311,12 +313,12 @@ export function CalendarPage({
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* Monthly Grid */}
-        <Card className="lg:col-span-8 overflow-hidden">
+        <Card className="lg:col-span-8 min-w-0 overflow-hidden">
           <div className="grid grid-cols-7 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/70">
             {WEEKDAYS.map((day) => (
               <div
                 key={day}
-                className="py-2.5 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
+                className="py-2 sm:py-2.5 text-center text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400"
               >
                 {day}
               </div>
@@ -336,7 +338,7 @@ export function CalendarPage({
                   key={key}
                   type="button"
                   onClick={() => setSelectedDate(day)}
-                  className={`min-h-[86px] sm:min-h-[104px] p-1.5 sm:p-2 text-left flex flex-col justify-between transition-colors cursor-pointer ${
+                  className={`min-h-[58px] sm:min-h-[104px] p-1 sm:p-2 text-left flex flex-col justify-between transition-colors cursor-pointer ${
                     isSelected
                       ? 'bg-blue-50/70 dark:bg-blue-950/30 ring-1 ring-inset ring-blue-500'
                       : inCurrentMonth
@@ -413,8 +415,8 @@ export function CalendarPage({
         </Card>
 
         {/* Selected Day Agenda */}
-        <Card className="lg:col-span-4">
-          <CardHeader className="flex flex-row items-start justify-between gap-2">
+        <Card className="lg:col-span-4 min-w-0">
+          <CardHeader className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div>
               <h2 className="text-base font-semibold">
                 {format(selectedDate, 'EEEE, MMM d')}

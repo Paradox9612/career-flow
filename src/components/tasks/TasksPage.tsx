@@ -171,7 +171,7 @@ export function TasksPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <Button
             type="button"
             variant="outline"
@@ -227,7 +227,7 @@ export function TasksPage({
 
       {/* Tabs & Filters */}
       <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-3">
-        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-fit overflow-x-auto max-w-full">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-full sm:w-fit overflow-x-auto max-w-full">
           {(
             [
               { id: 'active', label: `Active (${summary.active})` },
@@ -453,7 +453,7 @@ export function TasksPage({
                       </div>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 shrink-0 pl-8 lg:pl-0">
+                    <div className="flex flex-wrap items-center gap-2 shrink-0 w-full lg:w-auto">
                       {(task.category === 'Recruiter follow-up' || app) && (
                         <Button
                           type="button"
@@ -471,7 +471,7 @@ export function TasksPage({
                         value={task.status}
                         disabled={updatingId === task.id}
                         onChange={(e) => handleStatusSelect(task, e.target.value as TaskStatus)}
-                        className={`h-8 text-xs w-32 ${TASK_STATUS_META[task.status].toneClass}`}
+                        className={`h-8 text-xs flex-1 min-w-[120px] sm:flex-initial sm:w-32 ${TASK_STATUS_META[task.status].toneClass}`}
                       >
                         {TASK_STATUSES.map((s) => (
                           <option key={s} value={s}>
@@ -524,7 +524,7 @@ export function TasksPage({
             </strong>
             ?
           </p>
-          <div className="flex justify-end gap-2 pt-2">
+          <div className="flex flex-wrap justify-end gap-2 pt-2">
             <Button
               type="button"
               variant="outline"

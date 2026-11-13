@@ -190,7 +190,7 @@ export function ApplicationDetailView({
           <span>Back to applications</span>
         </button>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {onOpenAiAssistant && (
             <Button
               type="button"
@@ -229,8 +229,8 @@ export function ApplicationDetailView({
       )}
 
       <Card>
-        <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-5 sm:gap-6">
             <div className="space-y-2.5">
               <div className="flex items-center gap-3">
                 {application.companyLogo ? (
@@ -263,7 +263,7 @@ export function ApplicationDetailView({
                       </>
                     )}
                   </div>
-                  <h1 className="font-display text-2xl font-bold tracking-tight text-slate-900 dark:text-white mt-0.5">
+                  <h1 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white mt-0.5 break-words">
                     {application.jobTitle}
                   </h1>
                 </div>
@@ -318,8 +318,8 @@ export function ApplicationDetailView({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:flex sm:items-center gap-3 shrink-0">
-              <div className="min-w-[170px]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:flex lg:items-center gap-3 shrink-0">
+              <div className="sm:min-w-[170px]">
                 <span className="block text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                   Application Status
                 </span>
@@ -338,7 +338,7 @@ export function ApplicationDetailView({
                 </Select>
               </div>
 
-              <div className="min-w-[130px]">
+              <div className="sm:min-w-[130px]">
                 <span className="block text-[11px] font-medium text-slate-500 dark:text-slate-400 mb-1">
                   Priority
                 </span>
@@ -362,8 +362,8 @@ export function ApplicationDetailView({
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        <div className="lg:col-span-8 space-y-4">
-          <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-fit overflow-x-auto max-w-full">
+        <div className="lg:col-span-8 min-w-0 space-y-4">
+          <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-full sm:w-fit overflow-x-auto max-w-full">
             {(
               [
                 { id: 'overview', label: 'Overview & Notes' },
@@ -390,7 +390,7 @@ export function ApplicationDetailView({
           </div>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-4 sm:p-6">
               {activeTab === 'overview' && (
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
@@ -620,7 +620,7 @@ export function ApplicationDetailView({
                         Track follow-ups, assessment deadlines, and interview prep linked to this role.
                       </p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <Button
                         type="button"
                         variant="outline"
@@ -767,7 +767,7 @@ export function ApplicationDetailView({
 
               {activeTab === 'recruiter' && (
                 <div className="space-y-5">
-                  <div className="flex items-center justify-between gap-3">
+                  <div className="flex flex-wrap items-center justify-between gap-3">
                     <h3 className="text-sm font-semibold">Recruiter Contact</h3>
                     <Button
                       type="button"
@@ -794,7 +794,7 @@ export function ApplicationDetailView({
                           <Mail className="h-4 w-4 text-slate-400 shrink-0" />
                           <a
                             href={`mailto:${application.recruiterEmail}`}
-                            className="text-blue-600 dark:text-blue-400 hover:underline"
+                            className="text-blue-600 dark:text-blue-400 hover:underline break-all"
                           >
                             {application.recruiterEmail}
                           </a>
@@ -826,7 +826,7 @@ export function ApplicationDetailView({
           </Card>
         </div>
 
-        <div className="lg:col-span-4">
+        <div className="lg:col-span-4 min-w-0">
           <Card>
             <CardHeader>
               <h2 className="text-base font-semibold">Activity Timeline</h2>
@@ -834,7 +834,7 @@ export function ApplicationDetailView({
                 Every creation, status transition, and edit is logged automatically.
               </p>
             </CardHeader>
-            <CardContent className="p-5">
+            <CardContent className="p-4 sm:p-5">
               {logsLoading ? (
                 <div className="space-y-3">
                   <div className="h-10 rounded bg-slate-100 dark:bg-slate-800 animate-pulse" />

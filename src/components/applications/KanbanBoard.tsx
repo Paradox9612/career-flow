@@ -92,11 +92,11 @@ export function KanbanBoard({
   return (
     <div className="space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg">
+        <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg w-full sm:w-fit">
           <button
             type="button"
             onClick={() => setStageScope('active')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               stageScope === 'active'
                 ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -107,7 +107,7 @@ export function KanbanBoard({
           <button
             type="button"
             onClick={() => setStageScope('all')}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
+            className={`flex-1 sm:flex-initial px-3 py-1.5 text-xs font-medium rounded-md transition-colors whitespace-nowrap shrink-0 cursor-pointer ${
               stageScope === 'all'
                 ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
@@ -118,11 +118,11 @@ export function KanbanBoard({
         </div>
 
         <p className="text-xs text-slate-500 dark:text-slate-400">
-          Drag cards between columns or change status directly on a card.
+          Swipe columns or drag cards; use the stage dropdown on any card to move it.
         </p>
       </div>
 
-      <div className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1">
+      <div className="flex gap-3 sm:gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x snap-mandatory md:snap-none">
         {visibleStatuses.map((status) => {
           const items = grouped[status] ?? [];
           const meta = STATUS_META[status];
@@ -139,7 +139,7 @@ export function KanbanBoard({
                 if (dragOverStatus === status) setDragOverStatus(null);
               }}
               onDrop={(e) => handleDrop(e, status)}
-              className={`w-[292px] shrink-0 rounded-xl border transition-colors flex flex-col max-h-[calc(100vh-280px)] min-h-[380px] ${
+              className={`w-[84vw] max-w-[300px] sm:w-[292px] shrink-0 snap-center rounded-xl border transition-colors flex flex-col max-h-[65dvh] sm:max-h-[calc(100vh-280px)] min-h-[340px] sm:min-h-[380px] ${
                 isDropTarget
                   ? 'border-blue-500 bg-blue-50/40 dark:bg-blue-950/20'
                   : 'border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/50'

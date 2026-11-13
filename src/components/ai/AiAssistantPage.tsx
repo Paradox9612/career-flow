@@ -463,7 +463,7 @@ export function AiAssistantPage({
               aria-label="Load saved resume text"
               value={selectedDocId}
               onChange={(e) => handleSelectResumeDoc(e.target.value)}
-              className="h-8 rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200"
+              className="h-8 w-full sm:w-auto max-w-full rounded-md border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-2.5 text-xs text-slate-700 dark:text-slate-200"
             >
               <option value="">Load saved resume...</option>
               {resumeDocs.map((doc) => (
@@ -623,7 +623,7 @@ export function AiAssistantPage({
                 </div>
 
                 {expanded && (
-                  <div className="pl-6 space-y-2 text-xs text-slate-600 dark:text-slate-300">
+                  <div className="pl-4 sm:pl-6 space-y-2 text-xs text-slate-600 dark:text-slate-300">
                     <div>
                       <p className="font-semibold text-slate-700 dark:text-slate-200">
                         Suggested Approach
@@ -662,7 +662,7 @@ export function AiAssistantPage({
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
+        <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
           <span>
             {statusLoading
               ? 'Checking AI service...'
@@ -748,7 +748,7 @@ export function AiAssistantPage({
       )}
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-x-auto max-w-full w-fit">
+      <div className="flex items-center gap-1 p-1 bg-slate-100 dark:bg-slate-800 rounded-lg overflow-x-auto max-w-full w-full sm:w-fit">
         {(
           [
             { id: 'resume', label: 'Resume Analyzer' },
@@ -780,14 +780,14 @@ export function AiAssistantPage({
       {/* TAB 1: Resume Analyzer */}
       {activeTab === 'resume' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <Card className="lg:col-span-5">
+          <Card className="lg:col-span-5 min-w-0">
             <CardHeader>
               <h2 className="text-base font-semibold">Resume Input</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Get structured feedback, detected skills, and formatting recommendations.
               </p>
             </CardHeader>
-            <CardContent className="p-5 pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-5 pt-0 space-y-4">
               <div>
                 <Label htmlFor="ai-target-role">Target Role (Optional)</Label>
                 <Input
@@ -816,8 +816,8 @@ export function AiAssistantPage({
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-7">
-            <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <Card className="lg:col-span-7 min-w-0">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold">Resume Analysis</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -956,14 +956,14 @@ export function AiAssistantPage({
       {/* TAB 2: JD Analyzer */}
       {activeTab === 'jd' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <Card className="lg:col-span-5">
+          <Card className="lg:col-span-5 min-w-0">
             <CardHeader>
               <h2 className="text-base font-semibold">Job Posting Input</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Break down required skills, preferred qualifications, and keywords.
               </p>
             </CardHeader>
-            <CardContent className="p-5 pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-5 pt-0 space-y-4">
               {renderJobContextInputs(false)}
               <Button
                 type="button"
@@ -981,8 +981,8 @@ export function AiAssistantPage({
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-7">
-            <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <Card className="lg:col-span-7 min-w-0">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold">Job Requirements Breakdown</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -1108,14 +1108,14 @@ export function AiAssistantPage({
       {/* TAB 3: Resume-to-Job Match */}
       {activeTab === 'match' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <Card className="lg:col-span-5">
+          <Card className="lg:col-span-5 min-w-0">
             <CardHeader>
               <h2 className="text-base font-semibold">Compare Resume &amp; Role</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Evaluate skill coverage, gaps, and alignment recommendations.
               </p>
             </CardHeader>
-            <CardContent className="p-5 pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-5 pt-0 space-y-4">
               {renderResumeContextInput()}
               <div className="pt-3 border-t border-slate-100 dark:border-slate-800">
                 {renderJobContextInputs(false)}
@@ -1140,8 +1140,8 @@ export function AiAssistantPage({
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-7">
-            <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <Card className="lg:col-span-7 min-w-0">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold">Match &amp; Skill Gap Report</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -1275,14 +1275,14 @@ export function AiAssistantPage({
       {/* TAB 4: Cover Letter Generator */}
       {activeTab === 'cover' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <Card className="lg:col-span-5">
+          <Card className="lg:col-span-5 min-w-0">
             <CardHeader>
               <h2 className="text-base font-semibold">Cover Letter Context</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Draft a tailored cover letter grounded strictly in your experience.
               </p>
             </CardHeader>
-            <CardContent className="p-5 pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-5 pt-0 space-y-4">
               <div>
                 <Label htmlFor="ai-cover-tone">Tone Preference</Label>
                 <Select
@@ -1331,8 +1331,8 @@ export function AiAssistantPage({
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-7">
-            <CardHeader className="flex flex-wrap flex-row items-center justify-between gap-3">
+          <Card className="lg:col-span-7 min-w-0">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold">Editable Draft</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -1453,14 +1453,14 @@ export function AiAssistantPage({
       {/* TAB 5: Interview Question Generator */}
       {activeTab === 'questions' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <Card className="lg:col-span-5">
+          <Card className="lg:col-span-5 min-w-0">
             <CardHeader>
               <h2 className="text-base font-semibold">Interview Prep Context</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Generate role-specific technical, HR, behavioral, and system design practice questions.
               </p>
             </CardHeader>
-            <CardContent className="p-5 pt-0 space-y-4">
+            <CardContent className="p-4 sm:p-5 pt-0 space-y-4">
               <div>
                 <Label htmlFor="ai-q-focus">Question Focus</Label>
                 <Select
@@ -1512,8 +1512,8 @@ export function AiAssistantPage({
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-7">
-            <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <Card className="lg:col-span-7 min-w-0">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold">Practice Question Bank</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
@@ -1574,14 +1574,14 @@ export function AiAssistantPage({
       {/* TAB 6: Saved AI History */}
       {activeTab === 'history' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          <Card className="lg:col-span-5">
+          <Card className="lg:col-span-5 min-w-0">
             <CardHeader>
               <h2 className="text-base font-semibold">Saved AI History</h2>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 Only analyses you explicitly saved or opted into appear here.
               </p>
             </CardHeader>
-            <CardContent className="p-5 pt-0">
+            <CardContent className="p-4 sm:p-5 pt-0">
               {historyError && (
                 <p className="text-xs text-red-600 dark:text-red-400 mb-3">
                   {historyError}
@@ -1650,8 +1650,8 @@ export function AiAssistantPage({
             </CardContent>
           </Card>
 
-          <Card className="lg:col-span-7">
-            <CardHeader className="flex flex-row items-center justify-between gap-3">
+          <Card className="lg:col-span-7 min-w-0">
+            <CardHeader className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <h2 className="text-base font-semibold">
                   {inspectedHistoryItem

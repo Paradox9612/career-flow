@@ -116,7 +116,7 @@ export function AuthPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col">
-      <header className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
+      <header className="flex items-center justify-between px-4 sm:px-6 py-3.5 sm:py-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900">
         <span className="font-display text-lg font-bold tracking-tight">CareerFlow</span>
         <button
           type="button"
@@ -128,21 +128,21 @@ export function AuthPage() {
         </button>
       </header>
 
-      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-6xl w-full mx-auto px-6 py-10 lg:py-16 gap-12 items-center">
+      <main className="flex-1 grid grid-cols-1 lg:grid-cols-12 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-10 lg:py-16 gap-8 lg:gap-12 items-center">
         <section className="lg:col-span-6 space-y-6">
           <div className="space-y-3">
             <p className="text-xs font-medium text-blue-600 dark:text-blue-400">
               Personal Career Workspace
             </p>
-            <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight [text-wrap:balance]">
+            <h1 className="font-display text-2xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight [text-wrap:balance]">
               Make every job application organized and every decision informed.
             </h1>
-            <p className="text-base text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 max-w-lg leading-relaxed">
               Track roles across every interview stage, keep recruiter contacts and tailored resumes organized, and maintain a reliable timeline of your entire job search.
             </p>
           </div>
 
-          <div className="border-t border-slate-200 dark:border-slate-800 pt-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="border-t border-slate-200 dark:border-slate-800 pt-5 sm:pt-6 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             <div>
               <h2 className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                 14-Stage Pipeline Tracking
@@ -163,7 +163,7 @@ export function AuthPage() {
         </section>
 
         <section className="lg:col-span-6">
-          <div className="max-w-md mx-auto w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8">
+          <div className="max-w-md mx-auto w-full rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-5 sm:p-8">
             <div className="mb-6">
               <h2 className="font-display text-xl font-semibold tracking-tight">
                 {mode === 'login' && 'Sign in to CareerFlow'}

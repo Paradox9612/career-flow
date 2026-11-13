@@ -168,7 +168,7 @@ export function AppShell({
           onClick={() => setMobileMenuOpen(false)}
         >
           <aside
-            className="w-[260px] h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800"
+            className="w-[272px] max-w-[85vw] h-full bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800"
             onClick={(e) => e.stopPropagation()}
           >
             {sidebarContent}
@@ -178,8 +178,8 @@ export function AppShell({
 
       {/* Main Content Area */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <header className="h-16 px-4 sm:px-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between gap-4 sticky top-0 z-30">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="h-14 sm:h-16 px-3.5 sm:px-6 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between gap-2.5 sm:gap-4 sticky top-0 z-30">
+          <div className="flex items-center gap-2.5 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={() => setMobileMenuOpen(true)}
@@ -188,9 +188,9 @@ export function AppShell({
             >
               <Menu className="h-4 w-4" />
             </button>
-            <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm min-w-0">
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm min-w-0">
               {breadcrumbTrail.map((crumb, idx) => (
-                <span key={`${crumb}-${idx}`} className="flex items-center gap-2 min-w-0">
+                <span key={`${crumb}-${idx}`} className="flex items-center gap-1.5 sm:gap-2 min-w-0">
                   {idx > 0 && <span className="text-slate-400 shrink-0">/</span>}
                   <span
                     className={`truncate ${
@@ -206,7 +206,7 @@ export function AppShell({
             </nav>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <button
               type="button"
               onClick={toggleTheme}
@@ -223,7 +223,7 @@ export function AppShell({
           </div>
         </header>
 
-        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto">
+        <main className="flex-1 min-w-0 p-3.5 sm:p-6 lg:p-8 max-w-[1440px] w-full mx-auto overflow-x-clip">
           {children}
         </main>
       </div>
